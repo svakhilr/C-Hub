@@ -46,6 +46,9 @@ INSTALLED_APPS = [
      
     #  third party app
     'phonenumber_field',
+    'sweetify',
+    'crispy_forms',
+    'crispy_bootstrap4',
 
     'users.apps.UsersConfig',
     'home.apps.HomeConfig',
@@ -83,6 +86,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 
 
 # Database

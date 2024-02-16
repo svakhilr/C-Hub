@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .forms import CompanyProfileForm
-from .models import CustomUser,CompanyProfile,CompanyDocuments
+from .models import CustomUser,CompanyProfile,CompanyDocuments,CustomerProfile
 from products.models import Product
 
 
@@ -41,6 +41,11 @@ class ProductInlineAdmin(admin.TabularInline):
 class CompanyProfileAdmin(admin.ModelAdmin):
     form = CompanyProfileForm
     inlines = [CompanyDocumentsInlineAdmin,ProductInlineAdmin]
+
+
+@admin.register(CustomerProfile)
+class CustomerProfileAdmin(admin.ModelAdmin):
+    pass
     
 
     

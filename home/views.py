@@ -3,7 +3,7 @@ from products.models import Product
 
 def homeview(request):
     products = Product.objects.order_by('-created_on')[:3]
-    print(products)
+    print(request.user.is_authenticated)
     context = {
         "products":products
     }

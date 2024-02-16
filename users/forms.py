@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm 
 from django import forms
 from phonenumber_field.formfields import PhoneNumberField
-
+from django.contrib.auth import authenticate
 
 from .models import CompanyProfile,CustomerProfile,CustomUser
 
@@ -13,6 +13,20 @@ class CompanyProfileForm(forms.ModelForm):
         model = CompanyProfile
         fields = ('user','company_name','description','company_address',
                   'country','verification_status')
+        
+
+class UserLoginForm(forms.Form):
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'Full Name'}))
+    password = forms.CharField(widget= forms.PasswordInput(attrs={
+        'placeholder':'Enter password'
+    }))
+
+    def authenticate_user(self):
+        print(self.cleaned_data)
+        email = self.cleaned_data["email"]
+        password = self.cleaned_data["password"]
+        user = authenticate(username=email, password=password)
+        return user
         
 
 class CustomerRegistrationForm(forms.ModelForm):
@@ -57,7 +71,8 @@ class CustomerRegistrationForm(forms.ModelForm):
         user.phone_number = self.cleaned_data["phone_number"]
         user.save()
         print(user)
-        val = self.cleaned_data
-        print(val)
+        cleaned_data = self.cleaned_data
+        c =CustomerProfile.objects.create(user=user,name = cleaned_data["full_name"])
+        print(c)
         return user
         

@@ -69,7 +69,7 @@ celerybeat-schedule
 .venv
 venv/
 ENV/
-myenv
+myvenv
 
 # Rope project settings
 .ropeproject
@@ -285,3 +285,4 @@ config/.env
 requirements.txt
 myenv/
 media/
+__pycache__/

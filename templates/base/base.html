@@ -1,6 +1,7 @@
 {% load static %}
 
 
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -48,8 +49,8 @@
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
 						<div class="user-dropdown">
 					    
-						{% if user.is_login %}
-							<li><a class="nav-link" href="#"><img src="{% static 'images/user.svg' %}"> hai <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class=" ms-2 bi bi-chevron-compact-down" viewBox="0 0 16 16">
+						{% if user.is_authenticated %}
+							<li><a class="nav-link" href="#"><img src="{% static 'images/user.svg' %}"> <strong class="mt-2 "> Hai {{user.name}} </strong> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class=" ms-2 bi bi-chevron-compact-down" viewBox="0 0 16 16">
 								<path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67"/>
 							   </svg></a>
 						    </li>
@@ -60,13 +61,13 @@
 							</li>
                         {% endif %}
 							<div class="dropdown-content">
-								{%if user.is_login %}
+								{%if user.is_authenticated %}
 								<a href="#">Profile</a>
 								<a href="#">Settings</a>
-								<a href="#">Logout</a>
+								<a href="{% url 'user-logout'%}">Logout</a>
 								{% else %}
 								<a href="{% url 'customer-signup' %}">Signup</a>
-								<a href="#">Sign In</a>
+								<a href="{% url 'user-login' %}">Sign In</a>
 								{% endif %}
 							</div>
 			            </div>
@@ -191,6 +192,7 @@
 		<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 		<script src="{% static 'js/tiny-slider.js' %}"></script>
 		<script src="{% static 'js/custom.js' %}"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.6.5/sweetalert2.all.min.js"></script>
 		<script>
 			var minus = document.querySelector(".btn-subtract")
 			var add = document.querySelector(".btn-add");
@@ -209,6 +211,9 @@
 				console.log(currentValue);
 			});
 		</script>
+
+	{% load sweetify %}
+	{% sweetify %}
 	</body>
 
 </html>

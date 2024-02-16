@@ -6,6 +6,7 @@ from ..managers import CustomUserManager
 
 
 
+
 class CustomUser(AbstractBaseUser,PermissionsMixin):
     
     email = models.EmailField(unique=True)
@@ -22,4 +23,30 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+
+    @property
+    def is_customer(self):
+        try:
+            self.customer
+            return True
+        except:
+            return False
+    
+
+    @property
+    def is_company(self):
+        try:
+            self.company
+            return True
+        except:
+            return False
+
+    @property    
+    def name(self):
+        if self.is_company:
+            return self.company.company_name
+        else:
+            return self.customer.name
+
 
