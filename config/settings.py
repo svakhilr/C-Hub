@@ -46,6 +46,7 @@ INSTALLED_APPS = [
      
     #  third party app
     'phonenumber_field',
+    'django_countries',
     'sweetify',
     'crispy_forms',
     'crispy_bootstrap4',
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'home.apps.HomeConfig',
     'products.apps.ProductsConfig',
+    'vendor.apps.VendorConfig',
 ]
 
 MIDDLEWARE = [

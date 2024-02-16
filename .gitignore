@@ -282,7 +282,7 @@ config/.env
 .envs/*
 !.envs/.local/
 
-requirements.txt
+
 myenv/
 media/
 __pycache__/

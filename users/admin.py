@@ -46,6 +46,10 @@ class CompanyProfileAdmin(admin.ModelAdmin):
 @admin.register(CustomerProfile)
 class CustomerProfileAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(CompanyDocuments)
+class CompanyDocumentAdmin(admin.ModelAdmin):
+    pass
     
 
     
