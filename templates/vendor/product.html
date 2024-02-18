@@ -1,0 +1,74 @@
+{% extends 'vendor/vendorbase.html'%}
+{% load static %}
+
+
+{% block content%}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Product Table</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'vendor-dashboard'  %}">Home</a></li>
+          <li class="breadcrumb-item">Product</li>
+          <li class="breadcrumb-item active">Data</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Data</h5>
+              
+
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th>
+                      Product Image
+                    </th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>In Stock</th>
+                    <th>Action</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for product in products %}
+                  <tr>
+                    <td ><a href="#"><img style="height: 5rem;" src="{{ product.image.url}}" alt=""></a></td>
+                    <td>{{product.name}}</td>
+                    <td>{{product.discription}}</td>
+                    <td>{{product.price}}</td>
+                    <td>{{product.stock}}</td>
+                    <td>{{product.is_stock}}</td>
+                    <td> <a href="#" type="button" class="btn btn-primary">View</a>
+                      <a href="#" type="button" class="btn btn-success">Save</a>
+                    </td>
+                    <td> <a href="#" type="button" class="btn btn-danger">View</a></td>
+                  </tr>
+                {% endfor%}
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+
+{% endblock %}

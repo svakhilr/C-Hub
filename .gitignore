@@ -286,3 +286,4 @@ config/.env
 myenv/
 media/
 __pycache__/
+scrap.txt

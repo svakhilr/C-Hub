@@ -33,6 +33,12 @@ class CompanyProfile(models.Model):
     def __str__(self):
         return self.company_name
     
+    @property
+    def is_verified(self):
+        if self.verification_status == self.VERIFIED:
+            return True
+        return False
+    
 class CompanyDocuments(models.Model):
     
     company = models.OneToOneField(CompanyProfile, 

@@ -25,8 +25,9 @@ def user_login(request):
         if form.is_valid():
             user = form.authenticate_user()
             if user is not None:
+            
                 login(request,user)
-                sweetify.success(request, 'Account was successfuly registered')
+                sweetify.success(request, 'Account was successfuly Authenticated')
                 return redirect("/")
         else:
             sweetify.warning(request, 'Invalid Credentials')
@@ -38,7 +39,7 @@ def user_login(request):
 
 
 def user_logout(request):
-    print("logout")
+
     logout(request)
     sweetify.info(request, 'Logged Out', button='Ok', timer=3000)
     return redirect('home')
