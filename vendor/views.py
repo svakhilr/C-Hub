@@ -2,12 +2,14 @@ from django.shortcuts import render,redirect
 from vendor.forms import VendorRegistrationForm,VendorDocumentsForm
 from django.contrib.auth import  login,logout
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 
 import sweetify
 
 from users.models import CompanyProfile
 from users.forms import UserLoginForm
 from products.models import Product
+from products.forms import ProductForm
 
 def vendor_signup(request):
 
@@ -81,4 +83,52 @@ def vendor_products(request):
     print(products)
     context ={"products":products}
     return render(request, 'vendor/product.html', context)
+
+def product_view(request,product_id):
+    
+    try:
+        product = Product.objects.get(id=product_id)
+        
+    except Product.DoesNotExist:
+        raise Http404("Product does not exists")
+    
+    if request.method == "POST":
+        form = ProductForm(request.POST, request.FILES,instance=product)
+        if form.is_valid():
+            form.save()
+    
+    form = ProductForm(instance = product)
+    context = {
+        "form":form,
+        "product":product
+    }
+
+    return render(request, 'vendor/product_view.html',context)
+
+
+def add_product(request):
+    company = request.user.company
+    if request.method == "POST":
+        form = ProductForm(request.POST,request.FILES)
+        if form.is_valid():
+            product_form = form.save(commit=False) 
+            product_form.company = company
+            product_form.save()
+            sweetify.success(request , "Product Added")
+            return redirect('vendor-dashboard')
+    
+    form = ProductForm()
+    context = {
+        'form':form
+    }
+    return render(request,'vendor/add_product.html',context )
+
+def remove_product(request,product_id):
+    product = Product.objects.get(id=product_id)
+    product.delete()
+    sweetify.success(request, "Product Deleted")
+    return redirect("vendor-products")
+
+    
+
         

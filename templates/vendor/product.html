@@ -51,10 +51,10 @@
                     <td>{{product.price}}</td>
                     <td>{{product.stock}}</td>
                     <td>{{product.is_stock}}</td>
-                    <td> <a href="#" type="button" class="btn btn-primary">View</a>
-                      <a href="#" type="button" class="btn btn-success">Save</a>
+                    <td> <a href="{% url 'product-view'  product.id %}" type="button" class="btn btn-primary">View</a>
+                      
                     </td>
-                    <td> <a href="#" type="button" class="btn btn-danger">View</a></td>
+                    <td> <a href="{% url 'remove-product' product.id%}" onclick="return confirm('Are yoy sure to delete this item')" type="button" class="btn btn-danger">DELETE</a></td>
                   </tr>
                 {% endfor%}
                 </tbody>
