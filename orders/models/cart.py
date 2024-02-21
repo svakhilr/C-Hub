@@ -15,7 +15,7 @@ class Cart(models.Model):
         return self.customer.name
     
     @property
-    def grand_total(self):
+    def cart_total(self):
         total = 0
         try:
             cart_items = self.cart_item.all()
@@ -24,7 +24,17 @@ class Cart(models.Model):
             return total
         except:
             return total
+
+    @property    
+    def discount(self):
+        discount = 0
+        return discount
     
+    @property
+    def grand_total(self):
+        return self.cart_total-self.discount
+    
+
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart,
         on_delete=models.CASCADE,
@@ -37,4 +47,8 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.cart}-----{self.product}"
+    
+    @property
+    def cart_item_total(self):
+        return self.product.price*self.quantity
 

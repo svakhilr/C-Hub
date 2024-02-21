@@ -1,0 +1,129 @@
+{% extends 'base/base.html' %}
+
+
+{% block content%}
+
+<div class="container text-center mt-5 mb-5">
+    
+    <div class="row">
+     
+      <div class="col-md-7" style="background: rgb(243, 229, 229); height: 700px; overflow: scroll;">
+        {% for cartitem in cart_items %}
+         <div class="row mt-5 mb-5 product-data">
+             <div class="col-md-4">
+                <img  class="img-fluid" style="height: 10rem;"  src="{{cartitem.product.image.url}}">
+              </div>
+            <div class="col-md-8 text-start ">
+              <h1 class="mt-6"><strong>{{ cartitem.product.name}}</strong></h1>
+              <h5>{{ cartitem.product.discription}}</h5>
+              <h5 class="mt-2"> ₹ {{cartitem.product.price}}</h5>
+            </div>
+            <div>
+                <input type="hidden"  class="prod-id" value="{{cartitem.product.id}}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="input-group mt-5 col-md-3" style="width: 40%; height: 38px;">
+                        <span class="input-group-btn" style="font-size: 10px;">
+                            <button class="btn btn-sm btn-primary  btn-subtract updateqty" type="button" data-action="sub">-</button>
+                        </span>
+                        <input type="text" class="form-control no-padding text-center  item-quantity" value="{{cartitem.quantity}}" style="width: 2rem;">
+                        <span class="input-group-btn">
+                             <button class="btn btn-sm  btn-primary btn-add updateqty" type="button" data-action="add">+</button>
+                        </span>
+                    </div>
+                    <div class="col-md-6">
+                      <a href="{% url 'remove-cart-item' cartitem.id %}"  onclick="return confirm('Are yoy sure to delete this item')"  type="button" class="btn btn-warning mt-5 ">Remove</a>
+                      
+                    </div>
+                 </div>
+            </div>
+         </div>
+        {% endfor %}
+      </div>
+
+      <div class="col-md-4 ms-5 align-items-center mb-5 mt-3" style="background: rgb(243, 229, 229); max-height: 500px;">
+        
+        <div class="row mt-4">
+            <h1> PAYMENT DETAILS</h1>
+        </div>
+ 
+        <div class="d-flex flex-row mt-3">
+            <div class="p-2"><strong> <h3>Total: </h3> </strong></div>
+            <div class="p-2 ms-auto"> <h2>₹ <strong  id="cart-total">  {{cart.cart_total}} </strong> </h2></div>
+        </div>
+
+        <div class="d-flex flex-row mt-3">
+            <div class="p-2"><strong> <h3>Discount: </h3> </strong></div>
+            <div class="p-2 ms-auto"><h2> -₹ <strong  id="discount">  {{cart.discount}} </strong> </h2></div>
+        </div>
+
+        <div class="d-flex flex-row mt-3 mb-4">
+    
+            <div class="p-2"><strong> <h3>Grand Total: </h3> </strong></div>
+            <div class="p-2 ms-auto grand-total"><h2> ₹ <strong   id="grand-total">  {{cart.grand_total}} </strong></h2></div>
+        </div>
+        <a type="button" class="btn btn-primary btn-lg" style="background-color: rgb(112, 209, 202);"
+        onMouseOver="this.style.backgroundColor='#0056b3'; this.style.borderColor='#0056b3'; this.style.color='#fff';"
+        onMouseOut=this.style.backgroundColor='#007bff'; this.style.borderColor='#007bff'; this.style.color='#fff';" >Place Order</a>
+
+      </div>
+    </div>
+</div>    
+
+<script>
+  
+    [...document.getElementsByClassName('updateqty')].forEach(function (e){
+      e.addEventListener('click', function(){
+
+
+
+          id = Number(this.getAttribute('value'))
+          var prod_id= $(this).closest('.product-data').find('.prod-id').val();
+          var token = $('input[name=csrfmiddlewaretoken]').val();
+          var quantity= $(this).closest('.product-data').find('.item-quantity').val();
+          var action = this.dataset.action
+          
+  
+          
+          
+        //   console.log(prod_id)
+        //   console.log(token)
+          console.log("cart")
+          console.log(quantity)
+          console.log(action)
+          
+  
+          
+          $.ajax({
+              
+              url:'/order/update/cart/',
+              method:'POST',
+              dataType: 'json',
+              data: {
+                  "prod_id":prod_id,
+                  "quantity":quantity,
+                  "action":action,
+                  
+                  csrfmiddlewaretoken:token
+              },
+              success:(response) => {
+                  console.log(response.carttotal)
+                  total=response.total
+                  itemtotal= response.itemtotal
+                  cartitem_id=response.cartitem_id
+                  console.log(cartitem_id)
+                //   $("#sub_total-"+cartitem_id).text(itemtotal);
+                  // $('#total').text(total)
+                //   document.getElementById('total').textContent = total
+                //   document.getElementById('tax').textContent = response.tax
+                  document.getElementById('cart-total').textContent = response.carttotal
+                  document.getElementById('grand-total').textContent = response.grandtotal
+                  document.getElementById('discount').textContent = response.discount 
+             }
+          })
+      })
+  })
+
+</script>
+
+{% endblock %}

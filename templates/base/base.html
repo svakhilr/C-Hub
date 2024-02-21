@@ -39,7 +39,7 @@
 						<li class="nav-item active">
 							<a class="nav-link" href="index.html">Home</a>
 						</li>
-						<li><a class="nav-link" href="shop.html">Shop</a></li>
+						<li><a class="nav-link" href="{% url 'view-products' %}">Shop</a></li>
 						<li><a class="nav-link" href="about.html">About us</a></li>
 						<li><a class="nav-link" href="services.html">Services</a></li>
 						<li><a class="nav-link" href="blog.html">Blog</a></li>
@@ -71,7 +71,7 @@
 								{% endif %}
 							</div>
 			            </div>
-						<li><a class="nav-link" href="cart.html"><img src="{% static 'images/cart.svg' %}"></a></li>
+						<li><a class="nav-link" href="{% url 'view-cart' %}"><img src="{% static 'images/cart.svg' %}"></a></li>
 					</ul>
 				</div>
 			</div>
@@ -197,25 +197,34 @@
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.6.5/sweetalert2.all.min.js"></script>
 		<script>
-			var minus = document.querySelector(".btn-subtract")
-			var add = document.querySelector(".btn-add");
-			var quantityNumber = document.querySelector(".item-quantity");
-			var currentValue = 1;
+			$(document).ready(function() { 
 
-			minus.addEventListener("click", function(){
-				if (currentValue >1){
-				currentValue -= 1;
-				quantityNumber.value = currentValue;
-				console.log(currentValue)
-
+			$('.btn-subtract').on('click', function(){
+				console.log("jjj")
+				var quantityNumber = $(this).closest('.product-data').find('.item-quantity').val();
+				var value = parseInt(quantityNumber,10);
+				value = isNaN(value)? 0 :value
+				if (value >1){
+					console.log(value)
+				value--;
+				$(this).closest('.product-data').find('.item-quantity').val(value);
 				}
+				
+				
+				console.log(value);});
+
+			$('.btn-add').on('click', function(){
+				console.log("hkhkh")
+				var quantityNumber = $(this).closest('.product-data').find('.item-quantity').val();
+				var value = parseInt(quantityNumber,10);
+				value = isNaN(value)? 0 :value
+				console.log(value)
+				value ++
+				$(this).closest('.product-data').find('.item-quantity').val(value);
+				console.log(value);
 				
 			});
 
-			add.addEventListener("click", function() {
-				currentValue += 1;
-				quantityNumber.value = currentValue;
-				console.log(currentValue);
 			});
 		</script>
 

@@ -5,7 +5,7 @@
 {% block content %}
 
 <div>
-    <div class="container productdata mb-5">
+    <div class="container product-data mb-5">
         <div class="row justify-content-between align-items-center">
               
             <div class="col-lg-6 mt-5">
@@ -31,11 +31,11 @@
              <div class="row">
                 <div class="input-group mt-5 col-lg-6" style="width: 50%;">
                     <span class="input-group-btn">
-                        <button class="btn btn-default btn-subtract" type="button">-</button>
+                        <button class="btn btn-default  updateqty btn-subtract" type="button">-</button>
                     </span>
                     <input type="text" class="form-control no-padding text-center item-quantity" value="1">
                     <span class="input-group-btn">
-                         <button class="btn btn-default btn-add" type="button">+</button>
+                         <button class="btn btn-default updateqty  btn-add" type="button">+</button>
                     </span>
                 </div>
                 <div class="col-lg-6">
@@ -97,9 +97,10 @@
     [...document.getElementsByClassName('addtoCart')].forEach(function (e){
         e.addEventListener('click', function(){
             id = Number(this.getAttribute('value'))
-            var prod_id= $(this).closest('.productdata').find('.prod_id').val();
+            var prod_id= $(this).closest('.product-data').find('.prod_id').val();
             var token = $('input[name=csrfmiddlewaretoken]').val();
-            var item_quantity= $(this).closest('.productdata').find('.item-quantity').val();
+            var item_quantity= $(this).closest('.product-data').find('.item-quantity').val();
+            
             
             
             console.log(prod_id)
