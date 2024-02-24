@@ -1,0 +1,138 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="container mt-5 mb-5">
+
+    <div class="d-flex flex-md-row mb-3 justify-content-between">
+        <div class="card col-md-6">
+            <h5 class="card-header">Order Summary</h5>
+            <div class="card-body">
+                <input type="hidden"  id="order-id" value="{{order.id}}">
+                        {% csrf_token %}
+                {% for order_item in order_items %}
+                <div class="d-flex flex-row mb-3 justify-content-between">
+                    <div class="p-2 col-3">
+                        <img src="{{order_item.product_image.url}}" class="img-fluid" style="height:80%;" >
+                    </div>
+                    <div class="pt-2  me-auto ms-5">
+                        <h4>{{order_item.product_name}}</h4>
+                        <p>Quantity :{{order_item.quantity}}</p>
+                        <p>Price :₹ {{order_item.total_price}} </p>
+                    </div>
+                    
+                </div>
+                {% endfor %}
+                  
+
+
+             <div >
+              <h5 class="card-title">Delivery Address</h5>
+              <p><strong>{{order_address.house_number}} </strong> {{order_address.address|capfirst}}
+                <br>{{order_address.state}} {{order_address.pincode}}
+            </p>
+            </div>
+            </div>
+        </div>
+        <div class="card col-md-5 ms-5 p-5">
+            <div class="d-flex flex-row mb-3 justify-content-between">
+                <div class="p-2 col-6"><h3>TOTAL</h3></div>
+                <div class="p-2  col-6 align-items-start"><h3>₹: {{order.item_total}}</h3></div>
+            </div>
+
+            <div class="d-flex flex-row mb-3 justify-content-between">
+                <div class="p-2"><h3>DISCOUNT</h3></div>
+                <div class="p-2 col-6 align-items-start"><h3>₹: {{order.discount}}</h3></div>
+            </div>
+
+            <div class="d-flex flex-row mb-3 justify-content-between">
+                <div class="p-2"><h3>GRAND TOTAL</h3></div>
+                <div class="p-2 col-6 align-items-start"><h3>₹: {{order.grand_total}}</h3></div>
+            </div>
+
+            <div class="d-grid gap-2 col-9 mx-auto">
+                <button class="btn btn-success" type="button">Cash On Delivery</button>
+                <div id="paypal-button-container" style="max-width:1000px;"></div>
+                
+              </div>
+              
+            
+        </div>
+        
+      </div>
+      
+
+</section>
+
+<script src="https://www.paypal.com/sdk/js?client-id=AT9ZVhjnw4d_9XjccLWu6HVy6zJMZIwTUminVal-iBEz2Xmq7dp2BzVfqki1LZIM2FbGWhfzaQ1z5Mo0&currency=USD"></script>
+   
+<script>
+   paypal.Buttons({
+  style: {
+    disableMaxWidth: true,
+    shape:'pill'
+       },
+
+    // create order   
+    createOrder: function(data, actions) {
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    value: '3.00'
+                }
+            }]
+        });
+        },
+        
+        // Finalize the transaction
+       onApprove: function(data, actions) {
+           return actions.order.capture().then(function(orderData) {
+               // Successful capture! For demo purposes:
+               console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+               let transaction = orderData.purchase_units[0].payments.captures[0];
+                alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
+                var order = document.getElementById('order-id').value
+                var token =$("[name='csrfmiddlewaretoken']").val();
+                console.log(order)
+                $.ajax({
+                    url:'/order/paypalpayment/',
+                    method:'POST',
+                    dataType: 'json',
+                    data: {
+                        "order_id":order,
+                        "transaction_id":transaction.id,
+                        
+                        
+                        csrfmiddlewaretoken:token
+                    },
+                    //
+                    success: function (response) {
+                        // swal("Congratulations!",response.status,"success").then((value) => {
+                        //     window.location.href="/orders/invoice"
+                        // });
+                        console.log(response)
+                        console.log('confirm')
+                        Swal.fire({
+                                position: "top",
+                                icon: "success",
+                                title: "Payment Successful",
+                                showConfirmButton: false,
+                                timer: 1500
+                                });
+                        window.location.href="/order/invoice"
+            }
+          });
+            
+            
+
+
+
+            });
+         }
+
+    }).render('#paypal-button-container');
+
+   
+</script>
+{% endblock%}

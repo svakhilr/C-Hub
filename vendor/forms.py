@@ -1,5 +1,4 @@
 
-from typing import Any
 from django import forms
 from phonenumber_field.formfields import PhoneNumberField
 from django.contrib.auth import authenticate

@@ -1,0 +1,188 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<section class="container mt-4">
+    <div class="d-flex flex-row justify-content-between  bd-highlight mb-3">
+        <div class="p-2 bd-highlight col-md-6">
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            Add New Address
+                        </button>
+                    </h2>
+                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+                        data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <form action="{% url 'add-address' %}" method="post">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" name="address" placeholder="Address(Area & Street)"
+                                        class="form-control" id="">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Landmark</label>
+                                    <input type="text" name="landmark" placeholder="Landmark(Optional)"
+                                        class="form-control" id="">
+                                </div>
+
+
+                                <div class="d-flex flex-row justify-content-between">
+                                    <div class="mb-3 ">
+                                        <label class="form-label">House Number</label>
+                                        <input type="text" name="house_number" class="form-control" id="">
+                                    </div>
+                                    <div class="mb-3 ">
+                                        <label class="form-label">Pincode</label>
+                                        <input type="text" name="pincode" class="form-control" id="">
+                                    </div>
+                                </div>
+
+                                <!-- flex box -->
+                                <div class="d-flex flex-row justify-content-between">
+                                    <div class="mb-3">
+                                        <label for="exampleInputEmail1" class="form-label">City</label>
+                                        <input type="text" name="city" placeholder="City" class="form-control" id="">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="exampleInputEmail1" class="form-label">Address</label>
+                                        <input type="text" name="state" placeholder="State" class="form-control" id="">
+                                    </div>
+                                </div>
+                                <!-- end of flex box -->
+
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- address card -->
+            <form action="{% url 'confirm-order' %}" method="post">
+                {% csrf_token %}
+                <div class="card text mb-3 mt-5">
+
+                    <div class="card-header">
+                        <h5>Select Address</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if addresses %}
+                        {% for address in addresses %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="orderaddress" value="{{address.id}}"
+                                id="flexRadioDefault1">
+                            <label class="form-check-label ms-3" for="flexRadioDefault1">
+                                <p><strong>{{address.house_number}} </strong> {{address.address|capfirst}}
+                                    <br>{{address.state}} {{address.pincode}}
+                                </p>
+                            </label>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+
+                    </div>
+                </div>
+
+
+
+        </div>
+
+        <div class="p-2 bd-highlight ms-5 col-md-5 ">
+            <div class="card text-bg-light mb-3 ">
+                <div class="card-header">Payment Details</div>
+                <div class="card-body">
+                    <div class="d-flex flex-row mb-3 justify-content-between">
+                        <div class="p-2">
+                            <h3>Cart Total</h3>
+                        </div>
+                        <div class="p-2">
+                            <h3>₹ {{cart.cart_total}}</h3>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-row mb-3 justify-content-between">
+                        <div class="p-2">
+                            <h3>Discount</h3>
+                        </div>
+                        <div class="p-2">
+                            <h3>- ₹ {{cart.discount}}</h3>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-row mb-3 justify-content-between">
+                        <div class="p-2">
+                            <h3>Amount To Pay </h3>
+                        </div>
+                        <div class="p-2">
+                            <h3>₹ {{cart.grand_total}}</h3>
+                        </div>
+                    </div>
+
+
+
+                    <div class="d-flex justify-content-center">
+                        <a type="submit" class="btn btn-success  placeOrder">Confirm Order</a>
+                    </div>
+
+            
+
+                </div>
+            </div>
+
+
+        </div>
+
+        
+
+    </div>
+
+</section>
+
+<script>
+
+    [...document.getElementsByClassName('placeOrder')].forEach(function (e){
+        e.addEventListener('click', function(){
+            var orderaddress = document.querySelector('input[name="orderaddress"]:checked').value;
+            
+            var token =$("[name='csrfmiddlewaretoken']").val();
+            
+            
+            
+            
+            console.log(orderaddress)
+            console.log(token)
+            
+            $.ajax({
+                
+                url:'/order/confirm/',
+                method:'POST',
+                dataType: 'json',
+                data: {
+                    "order_address":orderaddress,
+                    csrfmiddlewaretoken:token
+                },
+                success:(response) => {
+                    console.log("response")
+                    console.log(response)
+                    console.log(response.order_id)
+                    
+                    window.location.href = '/order/payment/'+response.order_id
+                   
+                       
+                }
+            })
+        })
+    })
+    
+    
+</script>
+
+
+{% endblock %}

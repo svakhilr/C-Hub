@@ -4,6 +4,9 @@ from users.models import CustomerProfile
 from products.models import Product
 
 
+from django.utils import timezone
+
+
 class Cart(models.Model):
     customer = models.OneToOneField(CustomerProfile,
         on_delete= models.CASCADE,
@@ -33,6 +36,36 @@ class Cart(models.Model):
     @property
     def grand_total(self):
         return self.cart_total-self.discount
+    
+    def place_order(self):
+        from orders.models import Order,OrderItem
+        order = Order.objects.create(
+            customer_name = self.customer.name,
+            customer      =self.customer,
+            item_total    = self.cart_total,
+            discount      = self.discount,
+            grand_total   = self.grand_total
+        )
+        timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
+        order_id = f"IN{order.id}{timestamp}"
+        order.order_id=order_id
+        order.save()
+        cart_items = self.cart_item.all()
+        for cart_item in cart_items:
+            OrderItem.objects.create(
+                order = order,
+                product_name = cart_item.product.name,
+                price = cart_item.product.price,
+                quantity = cart_item.quantity,
+                product_image= cart_item.product.image,
+                company = cart_item.product.company
+            )
+        self.clear_cart()
+        
+        return order
+    
+    def clear_cart(self):
+        self.cart_item.all().delete()
     
 
 class CartItem(models.Model):

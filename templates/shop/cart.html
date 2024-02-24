@@ -62,7 +62,7 @@
             <div class="p-2"><strong> <h3>Grand Total: </h3> </strong></div>
             <div class="p-2 ms-auto grand-total"><h2> ₹ <strong   id="grand-total">  {{cart.grand_total}} </strong></h2></div>
         </div>
-        <a type="button" class="btn btn-primary btn-lg" style="background-color: rgb(112, 209, 202);"
+        <a type="button"  href="{% url 'checkout' %}" class="btn btn-primary btn-lg" style="background-color: rgb(112, 209, 202);"
         onMouseOver="this.style.backgroundColor='#0056b3'; this.style.borderColor='#0056b3'; this.style.color='#fff';"
         onMouseOut=this.style.backgroundColor='#007bff'; this.style.borderColor='#007bff'; this.style.color='#fff';" >Place Order</a>
 

@@ -2,7 +2,8 @@ from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import  login_required
 
-from .models import CartItem
+from .models import CartItem,Address,Order,Payments
+from .forms import AddressForm
 from products.models import Product
 from config.helper import get_cart
 
@@ -82,6 +83,85 @@ def update_cart(request):
             "grandtotal":cart.grand_total
         }
         return JsonResponse(context)
+
+
+def checkout(request):
+    cart = get_cart(request)
+    customer = request.user.customer
+    cart_items = cart.cart_item.all()
+    addresses = Address.objects.filter(customer=customer) 
+    context = {
+        'cart':cart,
+        'cartitems':cart_items,
+        'addresses':addresses
+    }
+    return render(request,'order/checkout.html',context)
+
+def add_address(request):
+    print("add address")
+    customer = request.user.customer
+    house_number = request.POST.get('house_number')
+    address      = request.POST.get('address')
+    city         = request.POST.get('city')
+    state        = request.POST.get('state')
+    land_mark    = request.POST.get('landmark')
+    pincode      = request.POST.get('pincode')
+    print(state)
+    address = Address.objects.create(
+        customer = customer,house_number=house_number,address=address,
+        city=city,state=state,land_mark=land_mark,pincode=pincode
+    )
+    return redirect('checkout')
+
+def confirm_order(request):
+    address_id = request.POST.get('order_address')
+    cart = get_cart(request)
+    order = cart.place_order()
+    address = Address.objects.get(id=address_id)
+    address.copy_to_order_address(order)
+    context = {
+        "success":"added",
+        "order_id":order.order_id
+    }
+    return JsonResponse(context)
+
+def payment_view(request,order_id):
+    order = Order.objects.get(order_id=order_id)
+    order_items = order.order_item.all()
+    order_address = order.order_address
+    print("order")
+    context = {
+        'order':order,
+        'order_items':order_items,
+        'order_address':order_address
+    }
+    return render(request,'order/payment.html',context)
+
+def paypal(request):
+    print('paypal')
+    order_id = request.POST.get('order_id')
+    transaction_id = request.POST.get('transaction_id')
+    print(order_id)
+    order = Order.objects.get(id=order_id)
+    payment = Payments.objects.create(order=order,online_transaction_id=transaction_id)
+    
+    return JsonResponse({"message":"payment done"})
+
+def cash_on_delivery(request):
+    pass
+
+
+def invoice(request):
+    customer = request.user.customer
+    order = Order.objects.filter(customer=customer).last()
+    print(order)
+    order_items =  order.order_item.all()
+    context = {
+        'order':order,
+        'order_items':order_items
+    }
+    return render(request,'order/invoice.html',context)
+
 
 
 
