@@ -18,6 +18,7 @@ class CompanyProfile(models.Model):
     on_delete = models.CASCADE,
     related_name ='company')
     company_name = models.CharField(max_length = 100)
+    profile_image = models.ImageField(upload_to='company/profile',blank=True,null=True)
     description = models.TextField(null=True,blank=True)
     verification_status = models.CharField(
         max_length = 20,

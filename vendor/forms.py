@@ -12,7 +12,7 @@ class CompanyProfileForm(forms.ModelForm):
 
     class Meta:
         model = CompanyProfile
-        fields = ('user','company_name','description','company_address',
+        fields = ('user','company_name','profile_image','description','company_address',
                   'country','verification_status')
         
 

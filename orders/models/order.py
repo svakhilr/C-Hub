@@ -25,13 +25,16 @@ class OrderItem(models.Model):
     REJECTED  = 'Rejected'
     CANCELLED = 'Cancelled'
     DELIVERED = 'Delivered'
+    SHIPPED  = 'Shipped'
 
     ORDER_STATUS =(
-        ("Pending",PENDING),
-        ("Accepted",ACCEPTED),
-        ("Rejected",REJECTED),
-        ("Cancelled",CANCELLED),
-        ("Delivered",DELIVERED)
+        (PENDING,"Pending"),
+        (ACCEPTED,"Accepted"),
+        (SHIPPED,"Shipped"),
+        (DELIVERED,"Delivered"),
+        (REJECTED,"Rejected"),
+        (CANCELLED,"Cancelled"),
+        
     )
 
     order = models.ForeignKey(Order,on_delete=models.CASCADE,related_name='order_item')

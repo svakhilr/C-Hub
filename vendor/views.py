@@ -3,6 +3,7 @@ from vendor.forms import VendorRegistrationForm,VendorDocumentsForm
 from django.contrib.auth import  login,logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.db.models import Sum
 
 import sweetify
 
@@ -10,6 +11,9 @@ from users.models import CompanyProfile
 from users.forms import UserLoginForm
 from products.models import Product
 from products.forms import ProductForm
+from orders.models import OrderItem
+
+from .forms import CompanyProfileForm
 
 def vendor_signup(request):
 
@@ -71,8 +75,26 @@ def upload_documents(request):
 @login_required(login_url="/vendor/signin/")
 def vendor_dashboard(request):
     company = request.user.company
-    context = {"company":company}
+    order_count = OrderItem.objects.filter(company=company).count()
+    revenue = OrderItem.objects.filter(company=company).aggregate(Sum('price'))
+    
+    context = {
+        "company":company,
+        "order_count":order_count,  
+        "revenue": revenue['price__sum']
+        }
     return render(request,"vendor/dashboard.html",context)
+
+def profile(request):
+    print("profile")
+    company = request.user.company
+    profile_form = CompanyProfileForm(instance=company)
+    context = {
+        "company":company,
+        "profile":profile_form
+    }
+    return render(request,'vendor/profile.html',context)
+
 
 @login_required(login_url="/vendor/signin/")
 def vendor_products(request):
@@ -129,6 +151,30 @@ def remove_product(request,product_id):
     sweetify.success(request, "Product Deleted")
     return redirect("vendor-products")
 
+
+def view_order(request):
+    print('view order')
+    company= request.user.company
+    order_items =OrderItem.objects.filter(company = company).order_by('-id')
+    order_status = OrderItem.ORDER_STATUS
+    print(order_items)
+    context ={
+        'order_items':order_items,
+        'order_status':order_status
+    }
+    return render(request,'vendor/orders.html',context)
+
+
+def change_delivery_status(request,item_id):
+    print(request.method)
+    if request.method == "POST":
+        order_item = OrderItem.objects.get(id=item_id)
+        status = request.POST.get('status')
+        order_item.order_status=status
+        order_item.save()
+        return redirect('view-order')
+
+ 
     
 
         

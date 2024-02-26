@@ -1,0 +1,96 @@
+{% extends 'vendor/vendorbase.html'%}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Product Table</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'vendor-dashboard'  %}">Home</a></li>
+        <li class="breadcrumb-item">Product</li>
+        <li class="breadcrumb-item active">Data</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Data</h5>
+
+
+            <!-- Table with stripped rows -->
+            <table class="table datatable">
+              <thead>
+                <tr>
+                  <th>
+                    Product Image
+                  </th>
+                  <th>Product Name</th>
+                  <th>Order ID</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Delivery Status</th>
+                  <!-- <th>In Stock</th> -->
+                  <th>Action</th>
+
+                </tr>
+              </thead>
+              <tbody class="mt-4">
+                {% for order_item in order_items %}
+                <tr>
+                  <td><a href="#"><img style="height: 5rem;" src="{{order_item.product_image.url}}" alt="image"></a></td>
+                  <td>{{order_item.product_name}}</td>
+                  <td>{{order_item.order.order_id}}</td>
+                  <td>{{order_item.price}}</td>
+                  <td>{{order_item.quantity}}</td>
+                  
+                    <td>
+                      <form action="{% url 'change-status' order_item.id %}" method="POST">
+                        {% csrf_token %}
+                      <select name="status" class="form-control justify-content-center">
+                        <option selected>{{order_item.order_status}}</option>
+                        {% for status in order_status %}
+                        {% if status != status.0 %}
+                        <option value="{{status.0}}">{{status.1}}</option>
+                        {% endif %}
+                        {% endfor %}
+
+                      </select>
+
+
+                    </td>
+                    <td>
+                      <button class="btn btn-danger" type="sumbit">Update</button>
+
+                    </td>
+                </form>
+
+
+
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main><!-- End #main -->
+
+
+
+
+{% endblock %}

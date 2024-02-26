@@ -1,10 +1,15 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
 
 {% block content%}
 
 <div class="container text-center mt-5 mb-5">
-    
+    {% if not cart_items %}
+     <h1>Oops! Cart Empty</h1>
+     <img src="{% static 'images/cartempty.png'%}">
+     <a  href="{% url 'home' %}"   type="button" class="btn  btn-lg mt-4">Continue Shopping</a>
+    {% else %}
     <div class="row">
      
       <div class="col-md-7" style="background: rgb(243, 229, 229); height: 700px; overflow: scroll;">
@@ -68,6 +73,7 @@
 
       </div>
     </div>
+    {% endif %}
 </div>    
 
 <script>
