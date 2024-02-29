@@ -3,20 +3,19 @@ from django import forms
 from phonenumber_field.formfields import PhoneNumberField
 from django.contrib.auth import authenticate
 
-from users.models import CompanyProfile,CompanyDocuments,CustomUser
+from users.models import CustomUser, WorkerProfile,JobProfile
 from django_countries.fields import CountryField
 
 
-class CompanyProfileForm(forms.ModelForm):
-    
+class WorkerProfileUpdateForm(forms.ModelForm):
+
 
     class Meta:
-        model = CompanyProfile
-        fields = ('user','company_name','profile_image','description','company_address',
-                  'country','verification_status')
+        model = WorkerProfile
+        fields = ('profile_name','profile_pic',)
         
 
-class VendorLoginForm(forms.Form):
+class WorkerLoginForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'Full Name'}))
     password = forms.CharField(widget= forms.PasswordInput(attrs={
         'placeholder':'Enter password'
@@ -30,7 +29,7 @@ class VendorLoginForm(forms.Form):
         return user
         
 
-class VendorRegistrationForm(forms.ModelForm):
+class WorkerRegistrationForm(forms.ModelForm):
     password= forms.CharField(widget= forms.PasswordInput(attrs={
         'placeholder':'Enter password'
     }))
@@ -38,10 +37,10 @@ class VendorRegistrationForm(forms.ModelForm):
     password2= forms.CharField(widget= forms.PasswordInput(attrs={
         'placeholder':'Confirm password'
     }))
-    company_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Company Name'}))
-    company_address = forms.CharField(widget=forms.Textarea(attrs={"rows":"5"}))
+    profile_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Profile Name'}))
+
     phone_number = PhoneNumberField(region="IN")
-    description  = forms.CharField(widget=forms.Textarea(attrs={"rows":"5"}))
+    
     
     class Meta:
         model=CustomUser
@@ -50,7 +49,7 @@ class VendorRegistrationForm(forms.ModelForm):
             # 'last_name'    : forms.TextInput(attrs = {'placeholder': 'last-name'}),
             'email'    : forms.TextInput(attrs = {'placeholder': 'E-Mail'}),
         }
-        fields=['company_name','email','phone_number','password','password2','description','company_address']
+        fields=['profile_name','email','phone_number','password','password2']
 
 
     # to override the class property
@@ -70,20 +69,23 @@ class VendorRegistrationForm(forms.ModelForm):
         return data
     
     def save(self, commit=True):
-        print(self.cleaned_data)
+
         user = CustomUser.objects.create_user(self.cleaned_data["email"],self.cleaned_data["password"])
         user.phone_number = self.cleaned_data["phone_number"]
         user.save()
         cleaned_data = self.cleaned_data
-        c =CompanyProfile.objects.create(user=user,company_name = cleaned_data["company_name"],
-            description=cleaned_data["description"],company_address=cleaned_data["company_address"])
+        WorkerProfile.objects.create(user=user,profile_name = cleaned_data["profile_name"])
         return user
     
 
-class VendorDocumentsForm(forms.ModelForm):
+class JobProfileForm(forms.ModelForm):
+
     class Meta:
-        model = CompanyDocuments
-        fields = ('adhar_card','liscence')
+        model = JobProfile
+        fields = ('job_profile_pic','description','job_category','max_amount_per_hour','is_negotiable')
+    
+
+
 
     
     
