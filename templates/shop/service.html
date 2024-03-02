@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+	<!-- Start Hero Section -->
+    <div class="hero">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-5">
+                    <div class="intro-excerpt">
+                        <h1>Service</h1>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- End Hero Section -->
+
+
+<!-- worker section -->
+
+<section class="section container">
+        
+    <div class="row">
+    {% for profile in profiles%} 
+    <div class="card col-md-4 m-4 text-white bg-success" style="height: 40rem;" >
+        <img class="card-img-top img-fluid mt-3" src="{{profile.job_profile_pic.url}}" alt="Card image cap" style="height: 300px;">
+        <div class="card-body text-center">
+          <h2 class="mt-4">{{profile.worker.profile_name}}</h2>
+          <p class="card-text">Job Category :<strong> {{profile.job_category}}</strong></p>
+          <p class="card-text">Contact Number :<strong> {{profile.worker.user.phone_number}}</strong></p>
+          <p class="card-text">Email :<strong> {{profile.worker.user.email}}</strong></p>
+          <p class="card-text">Rate Per Hour :<strong>₹ {{profile.max_amount_per_hour}}</strong></p>
+          <a href="#" class="btn btn-primary">View</a>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+    
+</section>
+
+
+   
+{% endblock %}

@@ -97,7 +97,11 @@
                     <div class="row mb-3">
                       <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                       <div class="col-md-8 col-lg-9">
+                        {% if not worker.profile_pic %}
+                        <img src="https://i.pinimg.com/474x/05/c3/59/05c359cd010df3e7f1ea3cb6f6f54fad.jpg" alt="Profile" class="rounded-circle">
+                        {% else %}
                         <a href="{{worker.profile_pic.url}}">{{worker.profile_pic.url}}</a>
+                        {% endif %}
                         <input type="file" name="profile_pic"   id="profile_pic" accept="image/*">
 
                         <div class="pt-2">

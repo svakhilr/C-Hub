@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import  login,logout
 from .forms import WorkerRegistrationForm,WorkerProfileUpdateForm,JobProfileForm
+from users.forms import UserLoginForm
 from users.models import WorkerProfile,JobProfile
 
 import sweetify
@@ -20,6 +21,25 @@ def worker_signup(request):
         "form":form
     }
     return render(request,'job/signup.html',context)
+
+def worker_signin(request):
+    if request.method == "POST":
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            user =form.authenticate_user()
+            
+            if user:    
+                login(request,user)
+                sweetify.success(request,'Authenticated')
+                return redirect('worker-dashboard')
+            else:
+                sweetify.error(request,'Invalid Credentials')
+
+    form = UserLoginForm()
+    context = {
+        'form':form
+    }
+    return render(request,'job/signin.html',context)
 
 
 def worker_signout(request):
@@ -78,5 +98,13 @@ def edit_job_profile(request,profile_id):
     profile = JobProfile.objects.get(id=profile_id)
     if request.method == 'POST':
         form = JobProfileForm(request.POST,request.FILES,instance=profile)
+
+
+def view_jobprofiles(request):
+    profiles = JobProfile.objects.all()
+    context = {
+        "profiles":profiles
+    }
+    return render(request,'shop/service.html',context)
 
 

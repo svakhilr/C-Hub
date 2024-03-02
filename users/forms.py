@@ -26,6 +26,7 @@ class UserLoginForm(forms.Form):
         email = self.cleaned_data["email"]
         password = self.cleaned_data["password"]
         user = authenticate(username=email, password=password)
+        
         return user
         
 

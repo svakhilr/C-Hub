@@ -51,7 +51,7 @@
             </div>
 
             <div class="d-grid gap-2 col-9 mx-auto">
-                <button class="btn btn-success" type="button">Cash On Delivery</button>
+                <a href="{% url 'cod' order.id %}"  class="btn btn-success" type="button">Cash On Delivery</a>
                 <div id="paypal-button-container" style="max-width:1000px;"></div>
                 
               </div>

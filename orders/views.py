@@ -2,10 +2,12 @@ from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import  login_required
 
-from .models import CartItem,Address,Order,Payments
+from .models import CartItem,Address,Order,Payments,OrderItem
 from .forms import AddressForm
 from products.models import Product
 from config.helper import get_cart
+
+import sweetify
 
 def add_to_cart(request):
     if request.method == "POST":
@@ -147,8 +149,13 @@ def paypal(request):
     
     return JsonResponse({"message":"payment done"})
 
-def cash_on_delivery(request):
-    pass
+def cash_on_delivery(request,order_id):
+    order = Order.objects.get(id=order_id)
+    Payments.objects.create(order=order)
+    sweetify.success(request,"Order Placed")
+    return redirect('invoice')
+    
+    
 
 
 def invoice(request):
@@ -161,6 +168,24 @@ def invoice(request):
         'order_items':order_items
     }
     return render(request,'order/invoice.html',context)
+
+def past_order(request):
+
+    customer = request.user.customer
+    order_items=[]
+    orders = Order.objects.filter(customer=customer).order_by('-id')
+    for order in orders:
+        order_items.append(order.order_item.all())
+
+    context = {
+        'orders':orders,
+        'order_items':order_items
+    }
+        
+    
+
+    return render(request,'order/pastorder.html',context)
+
 
 
 

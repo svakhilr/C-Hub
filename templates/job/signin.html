@@ -11,11 +11,11 @@
 			<div class="col-lg-8 col-xl-8">
 				<div class="card" style="border-radius: 10px;">
 					<div class="card-header px-4 py-5">
-						<h5 class=" mb-0" style="color: #a8729a;">VENDOR LOGIN</h5>
+						<h5 class=" mb-0" style="color: #a8729a;">WORKER LOGIN</h5>
 					</div>
 					<div class="main-agileinfo container mt-4">
 						<div class="agileits-top container">
-							<form action="{% url 'vendor-signin' %}" method="post">
+							<form action="" method="post">
 								{% csrf_token %}
 
 								<div class="form-group col-lg-9  " style="margin-left: auto; margin-right: auto;">
@@ -31,13 +31,13 @@
 								  <input type="submit" id="signup" class="btn btn-primary btn-lg signup mt-4 " value="LOGIN">
 							    </div>
 							</form>
-							<p>Don't have an Account? <a href="{% url 'customer-signup'%}"> Register Now!</a></p>
+							<p>Don't have an Account? <a href="{% url 'worker-signup'%}"> Register Now!</a></p>
 						</div>
 					</div>
 					<div class="card-footer border-0 px-4 py-5"
 						style="background-color: #a8729a; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
 						<h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">
-							Happy Shopping</h5>
+							WELCOME</h5>
 					</div>
 				</div>
 			</div>

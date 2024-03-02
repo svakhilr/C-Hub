@@ -11,5 +11,7 @@ urlpatterns = [
     path('confirm/',views.confirm_order,name='confirm-order'),
     path('payment/<str:order_id>/',views.payment_view,name='payment-view'),
     path('paypalpayment/',views.paypal,name='paypal'),
-    path('invoice/',views.invoice,name='invoice')
+    path('cod/<int:order_id>/',views.cash_on_delivery,name='cod'),
+    path('invoice/',views.invoice,name='invoice'),
+    path('pastorders/',views.past_order,name='past-order')
 ]

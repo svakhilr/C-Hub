@@ -27,7 +27,7 @@ class Payments(models.Model):
     payment_status = models.CharField(max_length=10, choices = PAYMENT_STATUS,default= UN_PAID)
 
     def __str__(self):
-        return self.online_transaction_id
+        return self.payment_id
     
     objects = PaymentManager()
 
@@ -35,4 +35,6 @@ class Payments(models.Model):
         if self.online_transaction_id:
             self.payment_type = self.ONLINE
             self.payment_status = self.PAID
+        else:
+            self.payment_type = self.COD
         return super().save(*args, **kwargs)
